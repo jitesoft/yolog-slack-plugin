@@ -21,59 +21,109 @@ describe('Test slack plugin.', () => {
 
     expect(fetch.mock.calls[0][0]).toEqual('https://fake-webhook.com');
     const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
-    expect(resultJson).toEqual({
-      username: 'Yolog',
-      channel: null,
-      attachments: [{
-        pretext: 'A log message with the tag test, was logged at 1970-01-01T03:25:45.678Z.',
-        fallback: '[TEST] (1970-01-01T03:25:45.678Z): Message message!',
-        color: '#CCCC00',
-        fields: [
-          { title: 'TEST', value: 'Message message!', short: false }
-        ]
-      }]
-    });
+    expect(resultJson).toEqual(
+      {
+        blocks: [
+          {
+            text: {
+              text: '_*TEST!*_\n_<!date^12346^{date_num} {time_secs}|1970-01-01T03:25:45.678Z>_',
+              type: 'mrkdwn'
+            },
+            type: 'section'
+          },
+          {
+            type: 'divider'
+          },
+          {
+            text: {
+              text: 'Message message!',
+              type: 'plain_text'
+            },
+            type: 'section'
+          }
+        ],
+        channel: null,
+        text: "A log message with the tag 'test' was logged!",
+        username: 'Yolog'
+      });
   });
 
   test('Sends message with changed time-format.', async () => {
     fetch.mockResolvedValue(() => Promise.resolve());
     plugin.timeFormat = (t) => t;
-    await expect(plugin.log('error', 12345678, 'Message message!')).resolves.toBeUndefined();
+    await expect(plugin.log('error', 12345678, 'Message message!', new Error())).resolves.toBeUndefined();
 
     expect(fetch.mock.calls[0][0]).toEqual('https://fake-webhook.com');
     const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual({
-      username: 'Yolog',
+      blocks: [
+        {
+          text: {
+            text: '_*ERROR!*_\n_<!date^12346^{date_num} {time_secs}|12345678>_',
+            type: 'mrkdwn'
+          },
+          type: 'section'
+        },
+        {
+          type: 'divider'
+        },
+        {
+          text: {
+            text: 'Message message!',
+            type: 'plain_text'
+          },
+          type: 'section'
+        },
+        {
+          elements: [
+            {
+              text: '_*CallStack:*_',
+              type: 'mrkdwn'
+            },
+            {
+              text: expect.any(String),
+              type: 'mrkdwn'
+            }
+          ],
+          type: 'context'
+        }
+      ],
       channel: null,
-      attachments: [{
-        pretext: 'A log message with the tag error, was logged at 12345678.',
-        fallback: '[ERROR] (12345678): Message message!',
-        color: 'danger',
-        fields: [
-          { title: 'ERROR', value: 'Message message!', short: false }
-        ]
-      }]
+      text: "A log message with the tag 'error' was logged!",
+      username: 'Yolog'
     });
   });
 
-  test('Sends message with changed informal text.', async () => {
+  test('Sends message with changed notification text.', async () => {
     fetch.mockResolvedValue(() => Promise.resolve());
-    plugin.informalText = 'Test test';
+    plugin.notificationText = 'Test test';
     await expect(plugin.log('test', 12345678, 'Message message!')).resolves.toBeUndefined();
 
     expect(fetch.mock.calls[0][0]).toEqual('https://fake-webhook.com');
     const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual({
-      username: 'Yolog',
+      blocks: [
+        {
+          text: {
+            text: '_*TEST!*_\n_<!date^12346^{date_num} {time_secs}|1970-01-01T03:25:45.678Z>_',
+            type: 'mrkdwn'
+          },
+          type: 'section'
+        },
+        {
+          type: 'divider'
+        },
+        {
+          text: {
+            text: 'Message message!',
+            type: 'plain_text'
+          },
+          type: 'section'
+        }
+      ],
       channel: null,
-      attachments: [{
-        pretext: 'Test test',
-        fallback: '[TEST] (1970-01-01T03:25:45.678Z): Message message!',
-        color: '#CCCC00',
-        fields: [
-          { title: 'TEST', value: 'Message message!', short: false }
-        ]
-      }]
+      text: 'Test test',
+      username: 'Yolog'
     });
   });
 
