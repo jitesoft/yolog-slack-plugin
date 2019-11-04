@@ -40,7 +40,7 @@
         "url": "https://gitlab.com/jitesoft/open-source/javascript/yolog-plugins/slack"
     },
     "peerDependencies": {
-        "@jitesoft/yolog": ">=2.5"
+        "@jitesoft/yolog": ">=2.6.4"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",
