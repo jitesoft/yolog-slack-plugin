@@ -13,6 +13,8 @@ Plugin for the [`@jitesoft/yolog`](https://www.npmjs.com/package/@jitesoft/yolog
 
 This plugin makes use of the slack WebHooks, hence it is only supported on the server side and not browser.
 
+![Example view](https://raw.githubusercontent.com/jitesoft/yolog-slack-plugin/master/example.img)
+
 ## Usage:
 
 Install with your favorite package manager!
@@ -30,13 +32,15 @@ import SlackPlugin from '@jitesoft/yolog-slack-plugin';
 logger.addPlugin(new SlackPlugin('https://webhook/uri'));
 ```
 
-The constructor of the slack plugin takes a slack webhook uri, (please check the slack documentation on how to aquire
+The constructor of the slack plugin takes a slack webhook uri, (please check the slack documentation on how to acquire
 one of those) and an optional channel with the `#` prefix (or user with the `@` prefix). If the channel argument is not 
 set, it will use the default channel set up with the webhook.
 
-You can change the timestamp function (which defaults to javascripts default iso function) to your own callback by
-setting the `timeFormat` property. The function should take a `timestamp` (that is, a normal unix timestamp) and return
-a single value that can resolve to a string.
+### Notification
 
-You may also change the informal text (aka pretext) of the output message by setting the `informalText` property. Check
-the jsDocs for usage and placeholders which will be resolved.
+The notification text can be changed with the `notificationText` setter. It defaults to `A log message with the tag '%s' was logged!` where `%s` will be changed the tag name.  
+You may also add another `%s` (check the [`@jitesoft/sprintf`](https://www.npmjs.com/package/@jitesoft/sprintf) module for more info about the placeholders) which will be changed to the log message.
+
+### Call stack
+
+In case the message is one of the 'higher level' logging types (error, critical, alert or emergency), the call stack (from the yolog #log method as of now) will be printed as an extra section in the message.

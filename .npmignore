@@ -5,3 +5,4 @@ tests
 .gitignore
 .gitlab-ci.yml
 .github
+example.png
