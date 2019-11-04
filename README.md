@@ -13,7 +13,7 @@ Plugin for the [`@jitesoft/yolog`](https://www.npmjs.com/package/@jitesoft/yolog
 
 This plugin makes use of the slack WebHooks, hence it is only supported on the server side and not browser.
 
-![Example view](https://raw.githubusercontent.com/jitesoft/yolog-slack-plugin/master/example.img)
+![Example view](https://raw.githubusercontent.com/jitesoft/yolog-slack-plugin/master/example.png)
 
 ## Usage:
 
