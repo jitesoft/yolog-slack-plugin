@@ -13,8 +13,7 @@ module.exports = {
   target: 'node',
   output: {
     filename: 'index.js',
-    globalObject: 'this',
-    libraryTarget: 'umd'
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
