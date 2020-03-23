@@ -5,16 +5,6 @@ import sprintf from '@jitesoft/sprintf';
 export default class Slack extends Plugin {
   #webHookUri = null;
   #channel = null;
-  /* The colours are disabled until they re-add(?) it...
-  #colors = {
-    error: 'danger',
-    critical: 'danger',
-    alert: 'danger',
-    emergency: 'danger',
-    warning: 'warning',
-    debug: 'good',
-    info: '#CCCC00'
-  }; */
   #timeFormat = (ts) => new Date(ts).toISOString();
   #notificationText = 'A log message with the tag \'%s\' was logged!';
 
@@ -32,6 +22,7 @@ export default class Slack extends Plugin {
    *
    * @param {String} value Value to set.
    */
+  // eslint-disable-next-line accessor-pairs
   set notificationText (value) {
     this.#notificationText = value;
   }
@@ -45,6 +36,7 @@ export default class Slack extends Plugin {
    *
    * @param {Function} callback Callback function to use instead of default.
    */
+  // eslint-disable-next-line accessor-pairs
   set timeFormat (callback) {
     this.#timeFormat = callback;
   }
