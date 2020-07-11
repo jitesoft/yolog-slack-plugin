@@ -7,7 +7,7 @@ export default class Slack extends Plugin {
   #channel = null;
   #timeFormat = (ts) => new Date(ts).toISOString();
   #notificationText = 'A log message with the tag \'%s\' was logged!';
-
+  #username;
   #showCallStack = [
     'error',
     'critical',
@@ -44,13 +44,15 @@ export default class Slack extends Plugin {
   /**
    * Constructor for the Slack Yolog plugin.
    *
-   * @param {String} webHookUri URI to send webhook payload to.
+   * @param {String}      webHookUri URI to send webhook payload to.
    * @param {String|null} [channel] Optional channel or user -name, if not set, default channel is used.
+   * @param {String}      [username] Optional username to send with the webhook.
    */
-  constructor (webHookUri, channel = null) {
+  constructor (webHookUri, channel = null, username = 'Yolog') {
     super();
     this.#webHookUri = webHookUri;
     this.#channel = channel;
+    this.#username = username;
   }
 
   /**
@@ -66,7 +68,7 @@ export default class Slack extends Plugin {
   async log (tag, timestamp, message, error) {
     const payload = {
       channel: this.#channel,
-      username: 'Yolog',
+      username: this.#username,
       text: sprintf(this.#notificationText, tag, this.#timeFormat(timestamp)),
       blocks: [
         {
