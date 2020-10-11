@@ -91,7 +91,7 @@ export default class Slack extends Plugin {
       ]
     };
 
-    if (this.#showCallStack.indexOf(tag.toLowerCase()) !== -1) {
+    if (error && this.#showCallStack.indexOf(tag.toLowerCase()) !== -1) {
       payload.blocks.push(
         {
           type: 'context',
