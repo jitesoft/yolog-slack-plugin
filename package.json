@@ -44,26 +44,26 @@
         "@jitesoft/yolog": ">=3.1"
     },
     "devDependencies": {
-        "@babel/core": "^7.12",
-        "@babel/eslint-parser": "^7.12",
-        "@jitesoft/babel-preset-main": "^2.6",
-        "@jitesoft/eslint-config": "^2.9",
-        "@jitesoft/yolog": "^3.1.2",
-        "babel-jest": "^26.6",
-        "babel-loader": "^8.1.0",
-        "core-js": "^3.6.5",
-        "cross-env": "^7.0.2",
-        "eslint": "^7.12",
-        "jest": "^26.6",
-        "webpack": "^5.3.2",
-        "webpack-cli": "^4.1.0"
+        "@babel/core": "^7.12.10",
+        "@babel/eslint-parser": "^7.12.1",
+        "@jitesoft/babel-preset-main": "^2.7.3",
+        "@jitesoft/eslint-config": "^2.12.0",
+        "@jitesoft/yolog": "^3.1.4",
+        "babel-jest": "^27.0.0-next.2",
+        "babel-loader": "^8.2.2",
+        "core-js": "^3.8.2",
+        "cross-env": "^7.0.3",
+        "eslint": "^7.17.0",
+        "jest": "^27.0.0-next.2",
+        "webpack": "^5.11.1",
+        "webpack-cli": "^4.3.1"
     },
     "scripts": {
         "test": "eslint src/ tests/ && jest && npm audit",
         "build:prod": "cross-env NODE_ENV=production webpack"
     },
     "dependencies": {
-        "@jitesoft/sprintf": "^1.0.21",
-        "node-fetch": "^2.6.1"
+        "@jitesoft/sprintf": "^1.1.2",
+        "node-fetch": "^3.0.0-beta.9"
     }
 }
