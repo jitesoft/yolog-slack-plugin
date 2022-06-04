@@ -19,7 +19,7 @@ describe('Test slack plugin.', () => {
     fetch.mockResolvedValue(() => Promise.resolve());
     await expect(plugin.log('test', 12345678, 'Message message!')).resolves.toBeUndefined();
 
-    expect(fetch.mock.calls[0][0]).toEqual('https://fake-webhook.com');
+    expect(fetch.mock.calls[0][0]).toBe('https://fake-webhook.com');
     const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual(
       {
@@ -53,7 +53,7 @@ describe('Test slack plugin.', () => {
     plugin.timeFormat = (t) => t;
     await expect(plugin.log('error', 12345678, 'Message message!', new Error())).resolves.toBeUndefined();
 
-    expect(fetch.mock.calls[0][0]).toEqual('https://fake-webhook.com');
+    expect(fetch.mock.calls[0][0]).toBe('https://fake-webhook.com');
     const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual({
       blocks: [
@@ -99,7 +99,7 @@ describe('Test slack plugin.', () => {
     plugin.notificationText = 'Test test';
     await expect(plugin.log('test', 12345678, 'Message message!')).resolves.toBeUndefined();
 
-    expect(fetch.mock.calls[0][0]).toEqual('https://fake-webhook.com');
+    expect(fetch.mock.calls[0][0]).toBe('https://fake-webhook.com');
     const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual({
       blocks: [
