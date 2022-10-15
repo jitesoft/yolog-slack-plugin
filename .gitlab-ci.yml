@@ -4,7 +4,7 @@ include:
 
 integration-test:
   stage: test
-  image: registry.gitlab.com/jitesoft/dockerfiles/node:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/node-base:latest
   script:
     - npm ci
     - npm run build:dev
