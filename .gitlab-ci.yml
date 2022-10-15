@@ -1,3 +1,17 @@
 include:
   - file: /Auto/npm.yml
     project: jitesoft/gitlab-ci-lib
+
+integration-test:
+  stage: test
+  image: registry.gitlab.com/jitesoft/dockerfiles/node:latest
+  script:
+    - npm ci
+    - npm run build:dev
+    - node integrationtest.js
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
+    - when: never

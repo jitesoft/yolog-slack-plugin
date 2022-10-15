@@ -60,7 +60,8 @@
     },
     "scripts": {
         "test": "jest",
-        "build:prod": "cross-env NODE_ENV=production webpack"
+        "build:prod": "cross-env NODE_ENV=production webpack",
+        "build:dev": "cross-env NODE_ENV=development webpack"
     },
     "dependencies": {
         "@jitesoft/sprintf": "^2.0.0",

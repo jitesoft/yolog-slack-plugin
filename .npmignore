@@ -6,3 +6,4 @@ tests
 .gitlab-ci.yml
 .github
 example.png
+integrationtest.js
