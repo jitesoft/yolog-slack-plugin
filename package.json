@@ -70,6 +70,6 @@
     },
     "dependencies": {
         "@jitesoft/sprintf": "^2.0.6",
-        "node-fetch": "^2.6.9"
+        "node-fetch": "^3.3.1"
     }
 }
