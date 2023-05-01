@@ -1,7 +1,11 @@
 import Slack from '../src';
-import fetch from 'node-fetch';
+import { MockAgent, setGlobalDispatcher } from 'undici';
 
-jest.mock('node-fetch');
+const mockAgent = new MockAgent();
+setGlobalDispatcher(mockAgent);
+mockAgent.disableNetConnect();
+
+const pool = mockAgent.get('https://fake-webhook.com');
 
 describe('Test slack plugin.', () => {
   let plugin = null;
@@ -11,16 +15,22 @@ describe('Test slack plugin.', () => {
   });
 
   afterEach(() => {
+    mockAgent.assertNoPendingInterceptors();
     jest.resetModules();
     jest.resetAllMocks();
   });
 
   test('Sends message to defined URI.', async () => {
-    fetch.mockResolvedValue(() => Promise.resolve());
-    await expect(plugin.log('test', 12345678, 'Message message!')).resolves.toBeUndefined();
+    let resultJson = null;
+    pool.intercept({
+      path: '/',
+      method: 'POST'
+    }).reply((r) => {
+      resultJson = JSON.parse(r.body);
+      return { statusCode: 200 };
+    });
 
-    expect(fetch.mock.calls[0][0]).toBe('https://fake-webhook.com');
-    const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
+    await expect(plugin.log('test', 12345678, 'Message message!')).resolves.toBeUndefined();
     expect(resultJson).toEqual(
       {
         blocks: [
@@ -49,12 +59,18 @@ describe('Test slack plugin.', () => {
   });
 
   test('Sends message with changed time-format.', async () => {
-    fetch.mockResolvedValue(() => Promise.resolve());
+    let resultJson = null;
+    pool.intercept({
+      path: '/',
+      method: 'POST'
+    }).reply((r) => {
+      resultJson = JSON.parse(r.body);
+      return { statusCode: 200 };
+    });
+
     plugin.timeFormat = (t) => t;
     await expect(plugin.log('error', 12345678, 'Message message!', new Error())).resolves.toBeUndefined();
 
-    expect(fetch.mock.calls[0][0]).toBe('https://fake-webhook.com');
-    const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual({
       blocks: [
         {
@@ -89,18 +105,24 @@ describe('Test slack plugin.', () => {
         }
       ],
       channel: null,
-      text: "A log message with the tag 'error' was logged!",
+      text: 'A log message with the tag \'error\' was logged!',
       username: 'Yolog'
     });
   });
 
   test('Sends message with changed notification text.', async () => {
-    fetch.mockResolvedValue(() => Promise.resolve());
+    let resultJson = null;
+    pool.intercept({
+      path: '/',
+      method: 'POST'
+    }).reply((r) => {
+      resultJson = JSON.parse(r.body);
+      return { statusCode: 200 };
+    });
+
     plugin.notificationText = 'Test test';
     await expect(plugin.log('test', 12345678, 'Message message!')).resolves.toBeUndefined();
 
-    expect(fetch.mock.calls[0][0]).toBe('https://fake-webhook.com');
-    const resultJson = JSON.parse(fetch.mock.calls[0][1].body);
     expect(resultJson).toEqual({
       blocks: [
         {
@@ -128,7 +150,12 @@ describe('Test slack plugin.', () => {
   });
 
   test('Throws error on fetch error.', async () => {
-    fetch.mockImplementation(async () => throw Error('Tis was an errors!'));
+    pool.intercept({
+      path: '/',
+      method: 'POST'
+    }).replyWithError(new Error('Tis was an errors!'));
+
     return expect(plugin.log('test', 12345678, 'Message message!')).rejects.toThrow('Tis was an errors!');
   });
-});
+})
+;

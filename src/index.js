@@ -1,6 +1,7 @@
 import { Plugin } from '@jitesoft/yolog';
-import fetch from 'node-fetch';
+import { request } from 'undici';
 import sprintf from '@jitesoft/sprintf';
+import { stat } from '@babel/core/lib/gensync-utils/fs';
 
 export default class Slack extends Plugin {
   #webHookUri = null;
@@ -14,6 +15,7 @@ export default class Slack extends Plugin {
     'alert',
     'emergency'
   ];
+  #throwOnHttpError = false;
 
   /**
    * Change the default notification text.
@@ -47,12 +49,14 @@ export default class Slack extends Plugin {
    * @param {String}      webHookUri URI to send webhook payload to.
    * @param {String|null} [channel] Optional channel or user -name, if not set, default channel is used.
    * @param {String}      [username] Optional username to send with the webhook.
+   * @param {boolean}     [throwOnHttpError] If to throw on http errors.
    */
-  constructor (webHookUri, channel = null, username = 'Yolog') {
+  constructor (webHookUri, channel = null, username = 'Yolog', throwOnHttpError = false) {
     super();
     this.#webHookUri = webHookUri;
     this.#channel = channel;
     this.#username = username;
+    this.#throwOnHttpError = throwOnHttpError;
   }
 
   /**
@@ -109,9 +113,13 @@ export default class Slack extends Plugin {
       );
     }
 
-    await fetch(this.#webHookUri, {
+    const { statusCode } = await request(this.#webHookUri, {
       method: 'POST',
       body: JSON.stringify(payload)
     });
+
+    if (this.#throwOnHttpError && statusCode > 399) {
+      throw new Error(`Http Request responded with status code ${statusCode}`);
+    }
   }
 }
