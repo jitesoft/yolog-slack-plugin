@@ -70,6 +70,6 @@
     },
     "dependencies": {
         "@jitesoft/sprintf": "^2.1.5",
-        "undici": "^5.26.4"
+        "undici": "^6.2.0"
     }
 }
